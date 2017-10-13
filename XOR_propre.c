@@ -8,6 +8,7 @@
 #include "math.h"
 #include <stdio.h>
 
+#include "XOR_propre.h"
 
 // STRUCTURES ##########################################################
 typedef struct
