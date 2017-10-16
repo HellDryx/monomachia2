@@ -1,24 +1,35 @@
+#define IN 2
+#define OUT 1
+#define HID 4
+
+
+#define M 0.1f
+#define N 0.1f
+
+#include "math.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 #include "personal_math_functions.h"
 
 double Exp(double x)
 { 
-	return exp(0.1d);
+	return exp(x);
 }
-float* Han(float *A, float *B, int length, float *new_matrice)
+double* Han(double *A, double *B, size_t length, double *new_matrice)
 {
-	for (int i = 0; i < length; i++)
+	for (size_t i = 0; i < length; i++)
 	{
 		new_matrice[i] = A[i] * B[i];
 	}
 	
 	return new_matrice;
 }
-float Sigmoid(float z)
+double Sigmoid(double z)
 {
-	return 1.0f / (1.0f + Exp(-z));
+	return 1.0d / (1.0d + Exp(-z));
 }
-float Sigmoid_prime(float z)
+double Sigmoid_prime(double z)
 {
-	return (Exp(-z) / (1.0f + Exp(-z)) * (1.0f + Exp(-z)));
+	return (Exp(-z) / (1.0d + Exp(-z)) * (1.0d + Exp(-z)));
 }

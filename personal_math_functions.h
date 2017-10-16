@@ -1,9 +1,9 @@
-#ifndef _PERSONAL_MATH_FUNCTION_H_
-#define _PERSONAL_MATH_FUNCTION_H_
+#ifndef _PERSONAL_MATH_FUNCTIONS_H_
+#define _PERSONAL_MATH_FUNCTIONS_H_
 
 double Exp(double x);
-float* Han(float *A, float *B, int length, float *new_matrice);
-float Sigmoid(float z);
-float Sigmoid_prime(float z);
+double* Han(double *A, double *B, size_t length, double *new_matrice);
+double Sigmoid(double z);
+double Sigmoid_prime(double z);
 
 #endif
