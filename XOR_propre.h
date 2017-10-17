@@ -22,5 +22,13 @@ typedef struct
 	
 }Network;
 
+typedef struct
+{
+	double *y;
+	double *inputs;
+	size_t length;
+	size_t current_iteration;
+}INPUTS;
+
 
 #endif
