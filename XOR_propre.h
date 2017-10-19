@@ -30,5 +30,10 @@ typedef struct
 	size_t current_iteration;
 }INPUTS;
 
+void Init_input(INPUTS inputs);
+void Init_layer_array(Layer layers[3]);
+void Init_wb(Layer layers[3]);
+void Init_network(Layer layers[3], INPUTS inputs);
+
 
 #endif

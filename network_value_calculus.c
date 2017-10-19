@@ -1,10 +1,7 @@
-#define IN 2
-#define OUT 1
-#define HID 4
 
 
-#define M 0.1f
-#define N 0.1f
+#define M 10
+#define N 00.1
 
 #include "math.h"
 #include <stdio.h>
@@ -23,7 +20,8 @@ double Get_z(Layer layers[], size_t l, size_t j)
 	 * Formula : Z = Sigma(Ai * Wi) + B
 	 */
 	
-	size_t iteration = (layers[l].length * j);
+	size_t iteration = (layers[l-1].length * j);
+	//size_t iteration = (layers[l].length * j);
 	
 	double ans = layers[l].b[j];
 	
@@ -36,7 +34,7 @@ double Get_deltaL(double y, double a, double z)
 {
 	return (a - y) * Sigmoid_prime(z);
 }
-double* Init_arr_deltaL(double *arr_deltaL, double *y, Layer layer_out)
+double* Init_arr_deltaL(double *arr_deltaL, double y, Layer layer_out)
 {
 	/* *arr_deltaL : an already created array where the result will be put
 	 * *y : a list of the output awaited from the network 
@@ -44,12 +42,12 @@ double* Init_arr_deltaL(double *arr_deltaL, double *y, Layer layer_out)
 	 */
 	
 	for (size_t i = 0; i < layer_out.length; i++)
-		arr_deltaL[i] = Get_deltaL(y[i], layer_out.a[i], layer_out.z[i]); 
+		arr_deltaL[i] = Get_deltaL(y, layer_out.a[i], layer_out.z[i]); 
 	
 	return arr_deltaL;
 }
-// ancienne erreur ici 
-double Get_deltal(double *deltaL, double *w, size_t length, size_t j, double z)
+// not used anymore + ancienne erreur ici 
+double Get_deltal(double *deltaL, double *w, size_t length, size_t previous_layer_length, size_t j, double z)
 {
 	/* deltaL : the delta of the next layer (l+1)
 	 * *w : the weight array of the next layer (l+1)
@@ -65,7 +63,8 @@ double Get_deltal(double *deltaL, double *w, size_t length, size_t j, double z)
 	//size_t iteration = length * j;
 	
 	for (size_t i = 0; i < length; i++)
-		ans += w[i * length] * deltaL[i]; 
+		ans += w[i * previous_layer_length + j] * deltaL[i];
+		//ans += w[i * length + j] * deltaL[i];
 	
 	ans *= Sigmoid_prime(z);
 		
@@ -73,8 +72,33 @@ double Get_deltal(double *deltaL, double *w, size_t length, size_t j, double z)
 }
 double* Init_arr_deltal(double *arr_deltal, double *arr_deltaL, Layer layer_out, Layer layer_hid)
 {
+	/*
 	for (size_t j = 0; j < layer_out.length; j++)
-		arr_deltal[j] = Get_deltal(arr_deltaL, layer_out.w, layer_out.length, j, layer_hid.z[j]);
+	{
+		double ans = 0.0f;
+		
+		//for (size_t i = 0; i < layer_hid.length; i++)
+			//ans += w[i * layer_hid.length + j] * deltaL[i];
+		for (size_t i = 0; i < layer_hid
+		
+		ans *= Sigmoid_prime(z);
+		
+		arr_deltal[j] = ans;
+	}
+	* */
+	double ans;
+	
+	for (size_t j1 = 0; j1 < layer_hid.length; j1++)
+	{
+		ans = 0.0d;
+		
+		for (size_t j2; j2 < layer_out.length; j2++)
+			ans += layer_out.w[j2 * layer_out.length + j1] * arr_deltaL[j2];
+			
+		ans *= Sigmoid_prime(layer_hid.z[j1]);
+		
+		arr_deltal[j1] = ans;
+	}
 		
 	return arr_deltal;
 }
@@ -93,7 +117,7 @@ void Set_new_arr_b(double *b, size_t length, double deltal[])
 }
 void Set_new_arr_w(double *w, size_t length, double deltal[], double *a, size_t previous_layer_length)
 {
-	/* *w : the posize_ter to the array of w from the layer l
+	/* *w : the pointer to the array of w from the layer l
 	 * length : the number of neuron of the layer l
 	 * deltal[] : the deltal array of the layer l
 	 * *a : the posize_ter to the array of a from the layer l-1

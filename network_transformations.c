@@ -1,10 +1,3 @@
-#define IN 2
-#define OUT 1
-#define HID 4
-
-
-#define M 0.1f
-#define N 0.1f
 
 #include "math.h"
 #include <stdio.h>
@@ -12,6 +5,7 @@
 #include "personal_math_functions.h"
 #include "XOR_propre.h"
 #include "network_value_calculus.h"
+#include "printing_functions.h"
 
 #include "network_transformations.h"
 
@@ -26,31 +20,44 @@ void FeedForward(Layer layers[])
 		}
 	}
 }
-void Backward_propagation(Layer layers[], double *y)
+void Backward_propagation(Layer layers[], double *y, size_t iteration_y)
 {
 	double dL[layers[2].length];
-	Init_arr_deltaL(dL, y, layers[2]); 
+	Init_arr_deltaL(dL, y[iteration_y], layers[2]); 
 	
 	double dl[layers[1].length];
 	Init_arr_deltal(dl, dL, layers[2], layers[1]);
+	
+	//Print_delta(dL, dl, layers[2].length, layers[1].length);
 	
 	// change w and b
 	Update_bw(layers[1], layers[2], dL);
 	Update_bw(layers[0], layers[1], dl);
 }
 // will change in the future
-void Init_feedforward(Layer layer_input, double *inputs)
+void Init_feedforward(Layer layer_input, INPUTS in)
 {
-	layer_input.a = inputs;
+	for (size_t i = 0; i < layer_input.length; i++)
+		layer_input.a[i] = in.inputs[in.current_iteration * layer_input.length + i]; 
 }
 // will change in the future
-void Learning(Layer layers[3], size_t number_of_lessons, double *inputs, double *y)
+void Learning(Layer layers[3], size_t number_of_lessons, INPUTS inputs, double *y)
 {
 	for (size_t i = 0; i < number_of_lessons; i++)
 	{
 		Init_feedforward(layers[0], inputs);
 		FeedForward(layers);
-		Backward_propagation(layers, y);
+		// display feed forward results 
+		printf("\nNew Iteration !\n");
+		Print_input(layers[0]);
+		Print_all(layers);
+		
+		Backward_propagation(layers, y, inputs.current_iteration);
+		// display back prop result inside the back prop function
+		
+		printf("%.0g xor %.0g -> %.3g\n", layers[0].a[0], layers[0].a[1], layers[2].a[0]);
+		
+		inputs.current_iteration = (inputs.current_iteration + 1) % 4;
 	}
 }
 

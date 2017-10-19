@@ -1,10 +1,3 @@
-#define IN 2
-#define OUT 1
-#define HID 4
-
-
-#define M 0.1f
-#define N 0.1f
 
 #include "math.h"
 #include <stdio.h>
@@ -31,5 +24,5 @@ double Sigmoid(double z)
 }
 double Sigmoid_prime(double z)
 {
-	return (Exp(-z) / (1.0d + Exp(-z)) * (1.0d + Exp(-z)));
+	return (Sigmoid(z) / (1.0d - Sigmoid(z)));
 }
