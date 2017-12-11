@@ -1,0 +1,25 @@
+# Makefile
+ 
+CC = gcc 
+CPPFLAGS = -MMD
+CFLAGS =  -Wall -Wextra -std=c99 
+LDFLAGS =
+LDLIBS = -lm
+
+OBJ2 = Vrac.c 
+DEP = ${OBJ2:.o=.d}
+ 
+all: Vrac
+
+Vrac: ${OBJ2}
+ 
+.PHONY: clean
+ 
+clean:
+	${RM} ${OBJ2}
+	${RM} ${DEP}
+	${RM} Vrac
+ 
+-include ${DEP}
+ 
+# END

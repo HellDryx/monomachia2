@@ -1,0 +1,25 @@
+# Makefile
+ 
+CC = gcc 
+CPPFLAGS = 'pkg-config --cflags sdl' -MMD
+CFLAGS =  -Wall -Wextra -std=c99 
+LDFLAGS =
+LDLIBS = 
+
+OBJ2 = XOR_propre.o network_transformations.o matrix_creation.o Save.o 
+DEP = ${OBJ2:.o=.d}
+ 
+all: XOR_propre
+
+XOR_propre: ${OBJ2}
+ 
+.PHONY: clean
+ 
+clean:
+	${RM} ${OBJ2}
+	${RM} ${DEP}
+	${RM} XOR_propre
+ 
+-include ${DEP}
+ 
+# END
